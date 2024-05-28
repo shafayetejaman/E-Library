@@ -10,7 +10,6 @@ chardet
 charset-normalizer
 click
 colorama
-command-not-found
 commonmark
 cov-core
 coverage
