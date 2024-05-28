@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import dj_database_url
 import environ
+import dj_database_url
 
 env = environ.Env()
 environ.Env.read_env()
@@ -101,10 +102,12 @@ WSGI_APPLICATION = "library_management_system.wsgi.application"
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
+# Replace the SQLite DATABASES configuration with PostgreSQL:
 DATABASES = {
     "default": dj_database_url.config(
-        # Feel free to alter this value to suit your needs.
-        default="",
+        # Replace this value with your local database's connection string.
+        default="postgresql://postgres:postgres@localhost:5432/mysite",
+        conn_max_age=600,
     )
 }
 
