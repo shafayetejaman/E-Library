@@ -5,7 +5,14 @@
 <style>
     body {
         background: linear-gradient(13.89deg, #030640 10.47%, #690e87 98.32%, #383b81);
+        {% if {{transactions | length}} > 2 %}
         height: 100%;
+
+        {% else %}
+        height: 120%;
+
+        {% endif %}
+
     }
 
     .card {
