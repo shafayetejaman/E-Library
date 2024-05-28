@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}{% endblock link %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+<section class="m-3">
+
+    <form method="post" class="w-50 m-auto text-danger h5" novalidate>
+        {% for err in form.non_field_errors %}
+        <div class="m-3 bg-danger p-3 rounded-3 text-white">{{err}}</div>
+        {% endfor %}
+
+        {% csrf_token %}
+        <!-- {{form | crispy }} -->
+        {% for fm in form %}
+        <div class="my-3">
+            <h5 class="my-1">{{fm.label_tag}}</h5>
+            {{fm}}
+            {{fm.errors|striptags}}
+        </div>
+        {% endfor %}
+
+        <button class="btn btn-primary my-4" type="submit">Submit</button>
+
+    </form>
+</section>
+
+
+{% endblock content %}

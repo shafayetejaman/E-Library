@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+<style>
+    body {
+        background: linear-gradient(13.89deg, #030640 10.47%, #690e87 98.32%, #383b81);
+        height: 100%;
+    }
+
+    .card {
+        background-color: rgb(115, 59, 151);
+
+    }
+
+    .card-img-top {
+        width: 100%;
+    }
+</style>
+
+{% endblock link %}
+
+{% block content %}
+{{block.super}}
+
+<!-- card section -->
+<section class="container-fluid my-5">
+
+    <div class="text-center my-5">
+
+        <input type="radio" class="btn-check" name="options-base" id="option0" autocomplete="off"
+            {% if not current_category %}checked{% endif %}>
+        <label class="btn btn-outline-danger" for="option0">
+            <a class="text-decoration-none text-white" href="{% url "home" %}">All
+            </a>
+        </label>
+
+        {% for category in categories %}
+
+        <input type="radio" class="btn-check" name="options-base" id="option{{category.id}}" autocomplete="off"
+            {% if current_category == category %}checked{% endif %}>
+        <label class="btn btn-outline-danger" for="option{{category.id}}">
+            <a class="text-decoration-none text-white" href="{% url "group_by" category.slug %}">{{category.name}}
+            </a>
+        </label>
+
+        {% endfor %}
+
+    </div>
+
+    <h2 class="text-white m-5 mb-3">Result Found: {{books|length}}</h2>
+
+    <div class="card-page row row-cols-4 mx-4 gap-3">
+
+        {% for book in books %}
+
+        <div class="col my-3">
+            <div class="card border-0">
+                  <a href="{% url "detail" book.id book.slug %}" class="text-decoration-none">
+                <img src="{{book.image.url}}" class="card-img-top" alt="...">
+                </a>
+
+                <div class="card-body text-center">
+
+                    <a href="{% url "detail" book.id book.slug %}" class="text-decoration-none">
+                        <h2 class="card-title text-danger">{{book.title}}</h2>
+                    </a>
+
+                    <p class="text-dark h4 my-4">
+                        Description: {{book.description | truncatewords:5}}
+                    </p>
+
+                    <h5 class="text-light">Quantity: {{book.quantity}}</h5>
+                    <h5 class="text-danger">Price: {{book.price}}$</h5>
+                    <h5 class="text-white btn bg-primary mt-4">Category: {{book.category.name}}</h5>
+
+                    {% if logged and book.quantity > 0 %}
+                    <h5 class="btn bg-success text-white mt-4">Add To Cart</h5>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock content %}

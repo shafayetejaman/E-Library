@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block link %}
+<style>
+    body {
+        background: linear-gradient(13.89deg, #030640 10.47%, #690e87 98.32%, #383b81);
+        height: 100%;
+    }
+
+    .card {
+        background-color: rgb(115, 59, 151);
+    }
+
+    .card-img-top {
+        width: 100%;
+    }
+
+    .table {
+        --bs-table-striped-bg: rgb(18, 27, 60);
+    }
+</style>
+
+{% endblock link %}
+
+{% block content %}
+
+<section>
+    <h1 class="m-5 text-danger">Wellcome {{user.username}}</h1>
+    <a href="{% url "pass_change" %}" class="m-5 btn btn-danger">Change Your Password</a>
+    <a href="{% url "edit_profile" %}" class="m-5 btn btn-danger">Edit Your Profile</a>
+</section>
+
+
+{% comment %} list of borrowed books {% endcomment %}
+<section>
+    <div class="card-page row row-cols-5 mx-4">
+
+        {% for transaction in borrows %}
+        {% with book=transaction.book %}
+
+        <div class="col my-3">
+            <div class="card border-0">
+                <img src="{{ book.image.url }}" class="card-img-top" alt="book Image">
+                <div class="card-body text-center">
+                    <a href="{% url 'detail' book.id book.slug %}" class="text-decoration-none">
+                        <h3 class="card-title text-danger">{{ book.title }}</h3>
+                    </a>
+                    <h5 class="text-danger my-3">Price: {{ book.price }}$</h5>
+                    <h6 class="text-danger my-3">Borrowed On: {{ transaction.timestamp }}</h6>
+                    <h5 class="text-white btn bg-primary mt-4">Category: {{ book.category.name }}</h5>
+                    <a href="{% url "return" book.id transaction.id %}"
+                        class="text-white btn bg-success mt-3">Return</a>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% endfor %}
+
+    </div>
+</section>
+
+{% comment %} history table {% endcomment %}
+<table class="table table-bordered table-striped table-dark w-75 m-auto my-5">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Title</th>
+            <th scope="col">Transaction Date</th>
+            <th scope="col">Amount</th>
+            <th scope="col">Type</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        {% for transaction in transactions %}
+        {% with book=transaction.book %}
+        <tr>
+            {% if transaction.transaction_type == 1 %}
+
+            {% with id=transaction.id amount=transaction.amount %}
+            <td scope="row">{{id}}</td>
+            <td>{{book.title}}</td>
+            <td>{{transaction.timestamp}}</td>
+            <td>{{amount}}</td>
+            <td>{{transaction.get_transaction_type_display}}</td>
+            {% endwith %}
+
+            {% else %}
+
+            {% with id=book.id amount=book.price %}
+            <td scope="row">{{id}}</td>
+            <td>{{book.title}}</td>
+            <td>{{transaction.timestamp}}</td>
+            <td>{{amount}}</td>
+            <td>{{transaction.get_transaction_type_display}}</td>
+            {% endwith %}
+
+            {% endif %}
+        </tr>
+        {% endwith %}
+        {% endfor %}
+
+    </tbody>
+</table>
+
+{% endblock content %}
