@@ -10,8 +10,10 @@ chardet
 charset-normalizer
 click
 colorama
+command-not-found
 commonmark
 cov-core
+coverage
 crispy-bootstrap5
 cryptography
 dbus-python
@@ -97,6 +99,7 @@ tornado
 typed-ast
 typer
 typing_extensions
+ubuntu-advantage-tools
 ufw
 unattended-upgrades
 virtualenv
