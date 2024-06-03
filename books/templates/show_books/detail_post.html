@@ -22,93 +22,141 @@
 
 {% block content %}
 
-<!-- book section -->
 
-<section class="container-fluid my-4 mb-0">
-    <div class="row mx-5">
+<section class="row container-fluid">
 
-        <div class="col my-3">
-            <div class="card p-4 m-1 rounded-3">
-                <img src="{{book.image.url}}" class="book-img-top rounded-2" alt="...">
+    <div class="col-9">
 
-                <div class="card-body">
+        <!-- book section -->
+        <section class="container-fluid my-4 mb-0">
+            <div class="row">
 
-                    <h1 class="card-title text-danger">{{book.title}}</h1>
+                <div class="col my-3">
+                    <div class="card p-4 m-1 rounded-3">
+                        <img src="{{book.image.url}}" class="book-img-top rounded-2" alt="...">
 
-                    <p class="text-dark h4 my-4">
-                        Description: {{book.description}}
-                    </p>
+                        <div class="card-body">
 
-                      <h5 class="text-light">Quantity: {{book.quantity}}</h5>
-                    <h5 class="text-danger">Price: {{book.price}}$</h5>
-                    <h5 class="text-white btn bg-primary mt-3">Category: {{book.category.name}}</h5>
+                            <h1 class="card-title text-danger">{{book.title}}</h1>
 
-                    {% if logged and book.quantity > 0 %}
-                    <div class="d-flex justify-content-center gap-3 mt-5">
+                            <p class="text-dark h4 my-4">
+                                Description: {{book.description}}
+                            </p>
 
-                        <h5 class="btn bg-success text-white">Add To cart</h5>
-                        <a href="{% url "borrow" book.id %}">
-                            <h5 class="btn bg-danger text-white">Borrow Now</h5>
+                            <h5 class="text-light">Quantity: {{book.quantity}}</h5>
+                            <h5 class="text-danger">Price: {{book.price}}$</h5>
+                            <h5 class="text-white btn bg-primary mt-3">Category: {{book.category.name}}</h5>
+
+                            {% if logged and book.quantity > 0 %}
+                            <div class="d-flex justify-content-center gap-3 mt-5">
+
+                                <h5 class="btn bg-success text-white">Add To cart</h5>
+                                <a href="{% url "borrow" book.id %}">
+                                    <h5 class="btn bg-danger text-white">Borrow Now</h5>
+                                </a>
+                            </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- comment section -->
+
+        {% if logged and borrowed != 0 %}
+        {% load crispy_forms_tags %}
+
+        <section class="container-fluid my-0">
+
+            <div class="row">
+                <div class="col my-3">
+                    <div class="card p-4 m-1 rounded-3">
+                        <h3 class="p-3">Total Comments : {{comments | length}}</h3>
+                        {% for comment in comments %}
+                        <div class="card-body border rounded-3 m-2 text-light">
+
+                            <div class="d-flex justify-content-between">
+                                <h5><strong>{{comment.name}}</strong></h5>
+                                <h6>{{comment.created}}</h6>
+                            </div>
+
+                            <p class="mt-4">{{comment.text}}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col my-3">
+
+                    <div class="card p-4 m-1 rounded-3">
+                        <div class="my-3 text-light">
+                            <div class="card-body rounded-3">
+                                <form method="post">
+
+                                    <h2 class="text-dark mb-4">Add Comment</h2>
+                                    {% csrf_token %}
+                                    {{comment_form | crispy}}
+
+                                    <button class="btn btn-primary text-white">Submit</button>
+
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- all books section -->
+    <div class="col-3">
+        <div class="card-page my-5">
+
+            {% for book in books %}
+
+            <div class="my-4">
+                <div class="card border-0">
+                    <a href="{% url "detail" book.id book.slug %}" class="text-decoration-none">
+                        <img src="{{book.image.url}}" class="card-img-top" alt="...">
+                    </a>
+
+                    <div class="card-body text-center">
+
+                        <a href="{% url "detail" book.id book.slug %}" class="text-decoration-none">
+                            <h2 class="card-title text-danger">{{book.title}}</h2>
                         </a>
-                    </div>
-                    {% endif %}
 
-                </div>
-            </div>
-        </div>
+                        <p class="text-dark h4 my-4">
+                            Description: {{book.description | truncatewords:5}}
+                        </p>
 
-    </div>
-</section>
+                        <h5 class="text-light">Quantity: {{book.quantity}}</h5>
+                        <h5 class="text-danger">Price: {{book.price}}$</h5>
+                        <h5 class="text-white btn bg-primary mt-4">Category: {{book.category.name}}</h5>
 
+                        {% if logged and book.quantity > 0 %}
+                        <h5 class="btn bg-success text-white mt-4">Add To Cart</h5>
+                        {% endif %}
 
-<!-- comment section -->
-
-{% if logged and borrowed != 0 %}
-{% load crispy_forms_tags %}
-
-<section class="container-fluid my-0">
-
-    <div class="row mx-5">
-        <div class="col my-3">
-            <div class="card p-4 m-1 rounded-3">
-                <h3 class="p-3">Total Comments : {{comments | length}}</h3>
-                {% for comment in comments %}
-                <div class="card-body border rounded-3 m-2 text-light">
-
-                    <div class="d-flex justify-content-between">
-                        <h5><strong>{{comment.name}}</strong></h5>
-                        <h6>{{comment.created}}</h6>
-                    </div>
-
-                    <p class="mt-4">{{comment.text}}</p>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
-    </div>
-
-    <div class="row mx-5">
-        <div class="col my-3">
-
-            <div class="card p-4 m-1 rounded-3">
-                <div class="my-3 text-light">
-                    <div class="card-body rounded-3">
-                        <form method="post">
-
-                            <h2 class="text-dark mb-4">Add Comment</h2>
-                            {% csrf_token %}
-                            {{comment_form | crispy}}
-
-                            <button class="btn btn-primary text-white">Submit</button>
-
-                        </form>
                     </div>
                 </div>
             </div>
+
+            {% endfor %}
         </div>
     </div>
 
 </section>
 
-{% endif %}
 {% endblock content %}

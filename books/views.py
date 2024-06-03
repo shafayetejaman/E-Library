@@ -72,6 +72,7 @@ class DetailPostView(DetailView):
         context["comments"] = comments
         context["comment_form"] = comment_form
         context["borrowed"] = borrowed
+        context["books"] = Book.objects.all().order_by("")[:4]
 
         return context
 
